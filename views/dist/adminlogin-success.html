@@ -1,0 +1,49 @@
+
+<html>
+  <head>
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/stylesheets/adminlogin-success.css" rel="stylesheet"/>
+    <script src="/javascripts/jquery-3.4.1.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+      <div class="container"><a class="navbar-brand" href="/auth/adminlogin"> <img class="logo" src="/images/logo.png"/></a>
+        <p>관리자</p>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="/project/support/log">모금 현황 조회</a></li>
+            <li class="nav-item"><a class="nav-link" href="/project/user/display">회원 관리</a></li>
+            <li class="nav-item"><a class="nav-link" href="/auth/userwithdrawl">회원 탈퇴</a></li>
+            <li class="nav-item"><a class="nav-link" href="/project/manager">프로젝트 관리</a></li>
+            <li class="nav-item"><a class="nav-link" href="/project/manager/CompleteList">지급된 프로젝트 관리</a></li>
+            <li class="nav-item"><a class="nav-link" href="/auth/adminlogout">로그아웃</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="page">
+      <div class="form">
+        <p class="label">등록된 유저 수</p>
+        <input class="input" type="text" readonly="on"/>
+        <p class="label">총 유저 머니</p>
+        <input class="input" type="text" readonly="on"/>
+      </div>
+      <div class="form">
+        <p class="label">등록된 프로젝트 수</p>
+        <input class="input" type="text" readonly="on"/>
+        <p class="label">진행중인 프로젝트 수</p>
+        <input class="input" type="text" readonly="on"/>
+        <p class="label">완료된 프로젝트 수</p>
+        <input class="input" type="text" readonly="on"/>
+      </div>
+    </div>
+    <script>var errorMsg = "";
+      if (errorMsg) {
+          alert(errorMsg);
+      }
+    </script>
+  </body>
+</html>

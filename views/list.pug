@@ -1,0 +1,91 @@
+doctype html
+html
+    head
+        link(href="/stylesheets/bootstrap.css", rel="stylesheet")
+        link(href="/stylesheets/list.css", rel="stylesheet")
+        script(src="/javascripts/jquery-3.4.1.js")
+        script(src="/javascripts/bootstrap.js")
+        script(src="/javascripts/bootstrap.min.js")
+        script(src="/routes/includeHTML.js")
+        script(src='./images/jquery_mini.js', type='text/javascript')
+        script(src='./images/jquery.dimensions.js', type='text/javascript')
+        title #{order} 프로젝트 보기
+    body
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.border.border-secondary.static-top
+            .container
+                a.navbar-brand(href="/auth/userlogin")
+                    img.logo(src="/images/logo.png")
+                button.navbar-toggler(type="button", data-toggle="collapse", data-target="#navbarResponsive", aria-controls="navbarResponsive", aria-expanded="false", aria-label="Toggle navigation")
+                    span.navbar-toggler.icon
+            .collapse.navbar-collapse#navbarResponsive
+                ul.navbar-nav.ml-auto
+                    li.nav-item
+                        a.nav-link(href="/auth/user") 내정보
+                    li.nav-item
+                        a.nav-link(href="/auth/user/supped") 프로젝트관리
+                    li.nav-item
+                        a.nav-link(href="/auth/userlogout") 로그아웃
+        .list-page
+            form.title-form
+                h1.headmessage #{order} 프로젝트 보기
+                .select-line(action="/project/list") 
+                    -var selected=[]
+                    case order
+                        when '최신순'
+                            -selected= ['selected',null,null]
+                        when '좋아요순'
+                            -selected= [null,'selected',null]
+                        when '카테고리별'
+                            -selected= [null,null,'selected']
+                    p #{selected}
+                    select(name="order" id="order").order.btn
+                        option(value="num" selected=`${selected[0]}`) 최신순
+                        option(value="likeit" selected=`${selected[1]}`) 좋아요순
+                        option(value="category" selected=`${selected[2]}`) 카테고리별
+                    button.order.btn(type="submit" onclick="sort()") 정렬
+                button.order.btn(value="insert" formmethod="GET" formaction="/project/insert") 📝
+            each data in rows
+                form.form
+                    img.img.rounded.float-start(src="/images/projects/#{data.PROJECT_IMAGE}"+".jpg").
+                    .row
+                        .display-inline
+                            -var projectsort
+                            case data.PROJECT_SORT
+                                when 1
+                                    projectsort= '장애인'
+                                when 2
+                                    projectsort= '아동'
+                                when 3
+                                    projectsort= '청소년'
+                                when 4
+                                    projectsort= '다문화'
+                                when 5
+                                    projectsort= '지구촌'
+                                when 6
+                                    projectsort= '동물'
+                                default
+                                    projectsort= '기타'
+                            p.category #{projectsort}
+                            h3.title #{data.PROJECT_NAME}
+                        br
+                        .col
+                            img.img-thumbnail(src="/images/profiles/#{data.USER_IMAGE}"+".jpg")
+                            p.username #{data.USER_NAME}
+                        .col.text-align-right    
+                            h4.date #{data.PROJECT_DUE.getFullYear()}-#{data.PROJECT_DUE.getMonth()+1}-#{data.PROJECT_DUE.getDate()}
+                            p.date 까지    
+                        hr
+                        .content
+                            p #{data.PROJECT_CONTENT}
+                        hr
+                        .money.inline-block
+                            p #{data.PROJECT_MONEY}/#{data.PROJECT_DUEMONEY} 원
+                        form.col(name='input', method='post', action='/project/list/'+`${data.PROJECT_NUM}`+ '/support')
+                            input(type='number', placeholder="후원할 금액을 입력하세요",name='money', maxlength='20')
+                            input.btn(type='submit', value='후원')
+                        form.col(name='input', method='post', action='/project/list/'+`${data.PROJECT_NUM}`+ '/like')
+                            input.btn(type="submit" name='likeit' value='👍'+ `${data.PROJECT_LIKE}` selected=`${data.USER_NAME}`)
+        script.
+            function supportmoney() {
+                window.open("/project/list/support");
+            }

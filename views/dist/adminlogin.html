@@ -1,0 +1,44 @@
+
+<html>
+  <head>
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/stylesheets/adminlogin.css" rel="stylesheet"/>
+    <script src="/javascripts/jquery-3.4.1.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="login-page">
+      <div class="form">
+        <form class="login-form" name="login"><img class="logo" src="/images/logo.png"/>
+          <p class="headmessage">관리자 페이지</p>
+          <p class="label">아이디</p>
+          <input name="userid" type="text" autocomplete="off"/>
+          <p class="label">비밀번호</p>
+          <input name="password" type="password" autocomplete="off"/>
+          <button formmethod="POST" formaction="/auth/adminlogin" onclick="return loginFormCheck()">로그인</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      function loginFormCheck() {
+          if (login.userid.value == "") {
+              alert("아이디를 입력해주세요.");
+              login.userid.focus();
+              return false;
+          }
+          if (login.password.value == "") {
+              alert("비밀번호를 입력해주세요.");
+              login.password.focus();
+              return false;
+          }
+          return true;
+      }
+      
+      var errorMsg = "";
+      if (errorMsg) {
+          alert(errorMsg);
+      }
+    </script>
+  </body>
+</html>
