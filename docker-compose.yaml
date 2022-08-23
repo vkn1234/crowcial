@@ -1,0 +1,11 @@
+version: '2'
+services:
+  node:
+    image: vkn123420/crowcial
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crowcial
+    working_dir: /home/vkn1234/crowcial
+    ports:
+      - 65004:65004
