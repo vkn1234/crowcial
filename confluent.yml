@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: docker.io/confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    container_name: zookeeper
+    ports: 
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 1
+  broker1:
+    image: docker.io/confluentinc/cp-kafka:latest
+    hostname: broker1
+    container_name: broker1
+    ports: 
+      - 19092:19092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:19092
+      KAFKA_BROKER_ID: 1
+    depends_on:
+      zookeeper
+  broker2:
+    image: docker.io/confluentinc/cp-kafka:latest
+    hostname: broker2
+    container_name: broker2
+    ports: 
+      - 29092:29092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:29092
+      KAFKA_BROKER_ID: 2
+    depends_on:
+      zookeeper
+  broker3:
+    image: docker.io/confluentinc/cp-kafka:latest
+    hostname: broker3
+    container_name: broker3
+    ports: 
+      - 39092:39092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:39092
+      KAFKA_BROKER_ID: 3
+    depends_on:
+      zookeeper
+  control-center:
+    image: docker.io/confluentinc/cp-enterprise-control-center:latest
+    hostname: control-center
+    container_name: control-center
+    ports:
+      - 9021:9021
+      - 9022:9022
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker1:19092,broker2:29092,broker3:39092
+      CONTROL_CENTER_REPLICATION_FACTOR: 2
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_REST_LISTENERS: http://0.0.0.0:9021,https://0.0.0.0:9022
+      PORT: 9021
+    depends_on:
+      broker1
+      broker2
+      broker3
