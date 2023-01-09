@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   zookeeper:
-    image: docker.io/confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:latest
     hostname: zookeeper
     container_name: zookeeper
     ports: 
@@ -10,90 +10,117 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVER_ID: 1
   broker1:
-    image: docker.io/confluentinc/cp-kafka:latest
+    image: confluentinc/cp-server:latest
     hostname: broker1
     container_name: broker1
     ports: 
-      - 18092:18092
+      # - 11092:11092
       - 19092:19092
-      - 11192:11192
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:19092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://10.7.20.27:19092
       KAFKA_BROKER_ID: 1
-      # KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 2
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker1:19092,broker2:29092,broker3:39092
-      CONFLUENT_METRICS_REPORTER_TOPIC_CREATE: 'true'
       KAFKA_CONFLUENT_METADATA_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_CONFLUENT_METADATA_SERVER_LISTENERS: PLAINTEXT://:18092
-      KAFKA_CONFLUENT_METADATA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://broker1:18092
+      KAFKA_CONFLUENT_METADATA_SERVER_AUTHENTICATION_METHOD: BEARER
+      KAFKA_CONFLUENT_METADATA_SERVER_LISTENERS: https://0.0.0.0:18092
+      KAFKA_CONFLUENT_METADATA_SERVER_ADVERTISED_LISTENERS: https://broker1:18092
+      ALLOW_PLAINTEXT_LISTENER: yes
+
     depends_on:
       zookeeper
   broker2:
-    image: docker.io/confluentinc/cp-kafka:latest
+    image: confluentinc/cp-server:latest
     hostname: broker2
     container_name: broker2
     ports: 
-      - 28092:28092
+      # - 21092:21092
       - 29092:29092
-      - 21192:21192
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://10.7.20.27:29092
       KAFKA_BROKER_ID: 2
-      # KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 2
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker1:19092,broker2:29092,broker3:39092
-      CONFLUENT_METRICS_REPORTER_TOPIC_CREATE: 'true'
       KAFKA_CONFLUENT_METADATA_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_CONFLUENT_METADATA_SERVER_LISTENERS: PLAINTEXT://:28092
-      KAFKA_CONFLUENT_METADATA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://broker2:28092
+      KAFKA_CONFLUENT_METADATA_SERVER_AUTHENTICATION_METHOD: BEARER
+      KAFKA_CONFLUENT_METADATA_SERVER_LISTENERS: https://0.0.0.0:28092
+      KAFKA_CONFLUENT_METADATA_SERVER_ADVERTISED_LISTENERS: https://broker2:28092
+      ALLOW_PLAINTEXT_LISTENER: yes
     depends_on:
       zookeeper
   broker3:
-    image: docker.io/confluentinc/cp-kafka:latest
+    image: confluentinc/cp-server:latest
     hostname: broker3
     container_name: broker3
     ports: 
-      - 38092:38092
+      # - 31092:31092
       - 39092:39092
-      - 31192:31192
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:39092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://10.7.20.27:39092
       KAFKA_BROKER_ID: 3
-      # KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 2
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker1:19092,broker2:29092,broker3:39092
-      CONFLUENT_METRICS_REPORTER_TOPIC_CREATE: 'true'
       KAFKA_CONFLUENT_METADATA_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_CONFLUENT_METADATA_SERVER_LISTENERS: PLAINTEXT://:38092
-      KAFKA_CONFLUENT_METADATA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://broker3:38092
+      KAFKA_CONFLUENT_METADATA_SERVER_AUTHENTICATION_METHOD: BEARER
+      KAFKA_CONFLUENT_METADATA_SERVER_LISTENERS: https://0.0.0.0:38092
+      KAFKA_CONFLUENT_METADATA_SERVER_ADVERTISED_LISTENERS: https://broker3:38092
+      ALLOW_PLAINTEXT_LISTENER: yes
     depends_on:
       zookeeper
+  # connect:
+  #   image: confluentinc/cp-kafka-connect:latest
+  #   container_name: connect
+  #   ports:
+  #     - 8083:8083
+  #   environment:
+  #     CUB_CLASSPATH: '/usr/share/java/confluent-security/connect/*:/usr/share/java/kafka/*:/usr/share/java/cp-base-new/*'
+  #     CONNECT_BOOTSTRAP_SERVERS: broker1:19092,broker2:29092,broker3:39092
+  #     CONNECT_LISTENERS: https://0.0.0.0:8083
+  #     CONNECT_GROUP_ID: "connect-cluster"
+  #     CONNECT_PRODUCER_CLIENT_ID: "connect-worker-producer"
+  #     CONNECT_PRODUCER_ENABLE_IDEMPOTENCE: 'true'
+
+  #     CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
+  #     CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
+  #     CONNECT_STATUS_STORAGE_TOPIC: connect-statuses
+
+  #     CONNECT_REPLICATION_FACTOR: 2
+  #     CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 2
+  #     CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 2
+  #     CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 2
+
+  #     CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+  #     CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+
+  #     CONNECT_REST_ADVERTISED_HOST_NAME: connect
+  #     CONNECT_PLUGIN_PATH: "/usr/bin/java,home/user/confluent-7.3.0/share/filestream-connectors"
+  #     CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+  #     CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
+  #     CLASSPATH: "/usr/share/java/monitoring-interceptors/*"
+
   control-center:
-    image: docker.io/confluentinc/cp-enterprise-control-center:latest
+    image: confluentinc/cp-enterprise-control-center:latest
     hostname: control-center
     container_name: control-center
     ports:
       - 9021:9021
       - 9022:9022
     environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: PLAINTEXT://broker1:19092,PLAINTEXT://broker2:29092,PLAINTEXT://broker3:39092
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker1:19092,broker2:29092,broker3:39092
       CONTROL_CENTER_REPLICATION_FACTOR: 2
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_REPLICATION: 2
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONTROL_CENTER_METRICS_TOPIC_REPLICATION: 2
-      CONTROL_CENTER_METRICS_TOPIC_PARTITIONS: 1
-      CONTROL_CENTER_REST_LISTENERS: http://:9021,https://:9022
-      CONFLUENT_METADATA_BOOTSTRAP_SERVER_URLS: PLAINTEXT://broker1:18092,PLAINTEXT://broker2:28092,PLAINTEXT://broker3:38092
-      CONFLUENT_METADATA_BASIC_AUTH_USER_INFO: controlcenterAdmin:controlcenterAdmin
+      CONTROL_CENTER_REST_LISTENERS: http://0.0.0.0:9021,https://0.0.0.0:9022
       PORT: 9021
     depends_on:
       broker1
       broker2
       broker3
       zookeeper
+      # connect
+      #update-alternatives --config java
